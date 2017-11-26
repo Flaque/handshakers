@@ -4,7 +4,8 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 
 export const initialState = {
-  handshakes: 0
+  handshakes: 0,
+  upgrades: []
 };
 
 export const initStore = initialState => {
