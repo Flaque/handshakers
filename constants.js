@@ -1,0 +1,1 @@
+export const FOLLOWERS_NEEDED_FOR_VOLUNTEERS = 20;
