@@ -1,45 +1,31 @@
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { addHandshakesWithClick } from "../actions";
-import Volunteers from "./Volunteers";
-import Upgrades from "./Upgrades";
-import {
-  FOLLOWERS_NEEDED_FOR_VOLUNTEERS,
-  FOLLOWERS_NEEDED_FOR_UPGRADES
-} from "../constants";
-import { FOLLOWERS } from "../lib/Currency";
+import { shakeHands } from "../actions/index";
 
 const App = props => {
   return (
     <div>
-      <p>{props.ticks}</p>
-      <button
-        onClick={() => {
-          props.addHandshakes();
-        }}
-      >
-        Shake Hand
-      </button>
+      <button onClick={props.shakeHands}> Shake Hands</button>
 
-      <p> {props.followers && <b> {props.followers} Followers </b>} </p>
-      {props.followers > FOLLOWERS_NEEDED_FOR_UPGRADES && <Upgrades />}
-
-      {props.followers > FOLLOWERS_NEEDED_FOR_VOLUNTEERS && <Volunteers />}
+      <p> {props.handshakes && <span>{props.handshakes} Handshakes</span>} </p>
+      <p> {props.followers && <span>{props.followers} Followers</span>} </p>
     </div>
   );
 };
 
 function mapStateToProps(state) {
   return {
-    followers: state.wallet[FOLLOWERS],
-    ticks: state.ticks
+    ticks: state.time.ticks,
+    handshakes: state.wallet.handshakes,
+    followers: state.wallet.followers
   };
 }
 
-const mapDispatchToProps = dispatch => {
+function mapDispatchToProps(dispatch) {
   return {
-    addHandshakes: bindActionCreators(addHandshakesWithClick, dispatch)
+    shakeHands: () => {
+      dispatch(shakeHands());
+    }
   };
-};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

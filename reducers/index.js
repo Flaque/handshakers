@@ -1,51 +1,13 @@
-import {
-  ADD_CURRENCY,
-  ADD_UPGRADE,
-  PAY,
-  ADD_ON_CLICK_CURRENCY_MODIFER,
-  ADD_ON_TICK_CURRENCY_MODIFER,
-  RESET,
-  TICK
-} from "../actions";
+import { TICK, UPDATE_HANDSHAKES, UPDATE_FOLLOWERS } from "../actions";
 import dotProp from "dot-prop-immutable";
-import { initialState } from "../store";
+import { combineReducers } from "redux";
+import { newWith, maybe, add } from "../util";
 
-const App = (state = initialState, action) => {
+const time = (state = {}, action) => {
   switch (action.type) {
-    case ADD_CURRENCY: {
-      const cost = dotProp.get(state, `wallet.${action.currency}`) || 0;
-      return dotProp.set(
-        state,
-        `wallet.${action.currency}`,
-        cost + action.cost
-      );
-    }
-    case ADD_UPGRADE: {
-      action.upgrade.bought = true;
-      return Object.assign({}, state, {
-        upgrades: [...state.upgrades, action.upgrade]
-      });
-    }
-    case ADD_ON_CLICK_CURRENCY_MODIFER:
-      return Object.assign({}, state, {
-        onClickModifiers: [...state.onClickModifiers, action.modifier]
-      });
-    case ADD_ON_TICK_CURRENCY_MODIFER:
-      return Object.assign({}, state, {
-        onTickModifiers: [...state.onTickModifiers, action.modifier]
-      });
-    case PAY: {
-      const currentBalance =
-        dotProp.get(state, `wallet.${action.currency}`) || 0;
-      return dotProp.set(
-        state,
-        `wallet.${action.currency}`,
-        currentBalance - action.cost
-      );
-    }
     case TICK:
       const current = state.ticks || 0;
-      return Object.assign({}, state, {
+      return newWith(state, {
         ticks: current + 1
       });
     default:
@@ -53,12 +15,19 @@ const App = (state = initialState, action) => {
   }
 };
 
-const rootReducer = (state, action) => {
-  if (action.type === RESET) {
-    state = undefined;
+const wallet = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_HANDSHAKES:
+      return newWith(state, {
+        handshakes: add(state.handshakes, action.amount)
+      });
+    case UPDATE_FOLLOWERS:
+      return newWith(state, {
+        followers: add(state.followers, action.amount)
+      });
+    default:
+      return state;
   }
-
-  return App(state, action);
 };
 
-export default rootReducer;
+export default combineReducers({ time, wallet });
