@@ -15,6 +15,7 @@ export const addHandshakesWithClick = () => {
       cost: 1,
       currency: FOLLOWERS
     };
+
     getState().onClickModifiers.forEach(modify => {
       charge = modify(charge);
     });
@@ -54,6 +55,19 @@ export const buyUpgrade = upgrade => {
       dispatch(pay(currency, cost));
     });
 
+    upgrade.onClickModifiers = upgrade.onClickModifiers || [];
+    upgrade.onTickModifiers = upgrade.onTickModifiers || [];
+
+    // Add modifiers
+    upgrade.onClickModifiers.forEach(modifier => {
+      dispatch(addOnClickCurrencyModifier(modifier));
+    });
+
+    upgrade.onTickModifiers.forEach(modifier => {
+      dispatch(addOnTickCurrencyModifier(modifier));
+    });
+
+    // Add upgrade
     dispatch(addUpgrade);
   };
 };

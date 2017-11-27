@@ -1,30 +1,43 @@
 import { connect } from "react-redux";
 import * as unsoldUpgrades from "../lib/Upgrade";
+import { buyUpgrade } from "../actions/index";
+import { bindActionCreators } from "redux";
 
-const UpgradeItem = ({ upgrade }) => {
+const UpgradeItem = ({ upgrade, buy }) => {
   const current = unsoldUpgrades[upgrade.type];
 
   return (
-    <li key={upgrade.type}>
-      <span>{upgrade.bought ? "purchased" : ""}</span>
-    </li>
+    <div key={upgrade.type}>
+      <label>
+        {upgrade.label}
+        {upgrade.purchased ? (
+          <span>{"[purchased]"}</span>
+        ) : (
+          <button
+            onClick={() => {
+              buy(upgrade);
+            }}
+          >
+            {"buy"}
+          </button>
+        )}
+      </label>
+    </div>
   );
 };
 
-const UpgradeList = ({ upgrades }) => {
-  const ups = Object.values(unsoldUpgrades).map(({ label, costs, type }) => (
-    <li key={type}>
-      <button> {label} </button>
-    </li>
+const UpgradeList = ({ upgrades, buy }) => {
+  const ups = Object.values(unsoldUpgrades).map(upgrade => (
+    <UpgradeItem upgrade={upgrade} buy={buy} />
   ));
 
-  return <ul> {ups} </ul>;
+  return <div> {ups} </div>;
 };
 
 const Upgrades = props => (
   <div>
     <h2>Item Shop</h2>
-    <UpgradeList upgrades={props.upgrades} />
+    <UpgradeList {...props} />
   </div>
 );
 
@@ -34,4 +47,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Upgrades);
+const mapDispatchToProps = dispatch => {
+  return {
+    buy: bindActionCreators(buyUpgrade, dispatch)
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Upgrades);
