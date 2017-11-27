@@ -7,6 +7,7 @@ export const ADD_UPGRADE = "ADD_UPGRADE";
 export const PAY = "PAY";
 export const ADD_ON_TICK_CURRENCY_MODIFER = "ADD_ON_TICK_CURRENCY_MODIFER";
 export const ADD_ON_CLICK_CURRENCY_MODIFER = "ADD_ON_CLICK_CURRENCY_MODIFER";
+export const RESET = "RESET";
 
 // Action creators
 export const addHandshakesWithClick = () => {
@@ -24,7 +25,7 @@ export const addHandshakesWithClick = () => {
   };
 };
 
-export const addCurrency = (cost, currency) => {
+export const addCurrency = (currency, cost) => {
   return { type: ADD_CURRENCY, cost: cost, currency: currency };
 };
 
@@ -70,4 +71,8 @@ export const buyUpgrade = upgrade => {
     // Add upgrade
     dispatch(addUpgrade);
   };
+};
+
+export const reset = upgrade => {
+  return { type: RESET };
 };

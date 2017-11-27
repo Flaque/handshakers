@@ -3,21 +3,21 @@ import {
   ADD_UPGRADE,
   PAY,
   ADD_ON_CLICK_CURRENCY_MODIFER,
-  ADD_ON_TICK_CURRENCY_MODIFER
+  ADD_ON_TICK_CURRENCY_MODIFER,
+  RESET
 } from "../actions";
+import dotProp from "dot-prop-immutable";
 import { initialState } from "../store";
 
 const App = (state = initialState, action) => {
   switch (action.type) {
     case ADD_CURRENCY: {
-      const wallet = state.wallet || {};
-      wallet[action.currency] = wallet[action.currency]
-        ? wallet[action.currency] + action.cost
-        : 0 + action.cost;
-
-      return Object.assign({}, state, {
-        wallet: wallet
-      });
+      const cost = dotProp.get(state, `wallet.${action.currency}`) || 0;
+      return dotProp.set(
+        state,
+        `wallet.${action.currency}`,
+        cost + action.cost
+      );
     }
     case ADD_UPGRADE: {
       action.upgrade.bought = true;
@@ -34,18 +34,24 @@ const App = (state = initialState, action) => {
         onTickModifiers: [...state.onTickModifiers, action.modifiers]
       });
     case PAY: {
-      const wallet = state.wallet || {};
-      wallet[action.currency] = wallet[action.currency]
-        ? wallet[action.currency] - action.cost
-        : 0 - action.cost;
-
-      return Object.assign({}, state, {
-        wallet: wallet
-      });
+      const cost = dotProp.get(state, `wallet.${action.currency}`) || 0;
+      return dotProp.set(
+        state,
+        `wallet.${action.currency}`,
+        cost - action.cost
+      );
     }
     default:
       return state;
   }
 };
 
-export default App;
+const rootReducer = (state, action) => {
+  if (action.type === RESET) {
+    state = undefined;
+  }
+
+  return App(state, action);
+};
+
+export default rootReducer;

@@ -5,7 +5,7 @@ import thunkMiddleware from "redux-thunk";
 
 export const initialState = {
   upgrades: [],
-  wallet: [],
+  wallet: {},
   onClickModifiers: [],
   onTickModifiers: []
 };
