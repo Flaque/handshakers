@@ -20,7 +20,7 @@ const App = props => {
         Shake Hand
       </button>
 
-      <p> {props.followers !== 0 && <b> {props.followers} Followers </b>} </p>
+      <p> {props.followers && <b> {props.followers} Followers </b>} </p>
       {props.followers > FOLLOWERS_NEEDED_FOR_UPGRADES && <Upgrades />}
 
       {props.followers > FOLLOWERS_NEEDED_FOR_VOLUNTEERS && <Volunteers />}

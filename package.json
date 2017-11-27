@@ -28,6 +28,7 @@
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "enzyme-react-16-adapter-setup": "^0.1.0",
+    "is-function": "^1.0.1",
     "jest": "^21.2.1",
     "react-test-renderer": "^16.1.1"
   }

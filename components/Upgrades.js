@@ -10,7 +10,7 @@ const UpgradeItem = ({ upgrade, buy }) => {
     <div key={upgrade.type}>
       <label>
         {upgrade.label}
-        {upgrade.purchased ? (
+        {upgrade.bought ? (
           <span>{"[purchased]"}</span>
         ) : (
           <button
@@ -28,7 +28,7 @@ const UpgradeItem = ({ upgrade, buy }) => {
 
 const UpgradeList = ({ upgrades, buy }) => {
   const ups = Object.values(unsoldUpgrades).map(upgrade => (
-    <UpgradeItem upgrade={upgrade} buy={buy} />
+    <UpgradeItem key={upgrade.type} upgrade={upgrade} buy={buy} />
   ));
 
   return <div> {ups} </div>;

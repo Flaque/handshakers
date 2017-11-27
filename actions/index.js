@@ -21,7 +21,7 @@ export const addHandshakesWithClick = () => {
       charge = modify(charge);
     });
 
-    dispatch(addCurrency(charge.cost, charge.currency));
+    dispatch(addCurrency(charge.currency, charge.cost));
   };
 };
 
@@ -56,6 +56,9 @@ export const buyUpgrade = upgrade => {
       dispatch(pay(currency, cost));
     });
 
+    // Add upgrade
+    dispatch(addUpgrade(upgrade));
+
     upgrade.onClickModifiers = upgrade.onClickModifiers || [];
     upgrade.onTickModifiers = upgrade.onTickModifiers || [];
 
@@ -67,9 +70,6 @@ export const buyUpgrade = upgrade => {
     upgrade.onTickModifiers.forEach(modifier => {
       dispatch(addOnTickCurrencyModifier(modifier));
     });
-
-    // Add upgrade
-    dispatch(addUpgrade);
   };
 };
 

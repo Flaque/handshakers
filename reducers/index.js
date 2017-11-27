@@ -27,18 +27,19 @@ const App = (state = initialState, action) => {
     }
     case ADD_ON_CLICK_CURRENCY_MODIFER:
       return Object.assign({}, state, {
-        onClickModifiers: [...state.onClickModifiers, action.modifiers]
+        onClickModifiers: [...state.onClickModifiers, action.modifier]
       });
     case ADD_ON_TICK_CURRENCY_MODIFER:
       return Object.assign({}, state, {
-        onTickModifiers: [...state.onTickModifiers, action.modifiers]
+        onTickModifiers: [...state.onTickModifiers, action.modifier]
       });
     case PAY: {
-      const cost = dotProp.get(state, `wallet.${action.currency}`) || 0;
+      const currentBalance =
+        dotProp.get(state, `wallet.${action.currency}`) || 0;
       return dotProp.set(
         state,
         `wallet.${action.currency}`,
-        cost - action.cost
+        currentBalance - action.cost
       );
     }
     default:
