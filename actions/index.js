@@ -1,13 +1,38 @@
 import purchase from "../lib/Purchase";
+import { FOLLOWERS } from "../lib/Currency";
 
 // Action names
-export const ADD_HANDSHAKES = "ADD_HANDSHAKES";
+export const ADD_CURRENCY = "ADD_CURRENCY";
 export const ADD_UPGRADE = "ADD_UPGRADE";
 export const PAY = "PAY";
+export const ADD_ON_TICK_CURRENCY_MODIFER = "ADD_ON_TICK_CURRENCY_MODIFER";
+export const ADD_ON_CLICK_CURRENCY_MODIFER = "ADD_ON_CLICK_CURRENCY_MODIFER";
 
 // Action creators
-export const addHandshakes = number => {
-  return { type: ADD_HANDSHAKES, number: number };
+export const addHandshakesWithClick = () => {
+  return (dispatch, getState) => {
+    let charge = {
+      cost: 1,
+      currency: FOLLOWERS
+    };
+    getState().onClickModifiers.forEach(modify => {
+      charge = modify(charge);
+    });
+
+    dispatch(addCurrency(charge.cost, charge.currency));
+  };
+};
+
+export const addCurrency = (cost, currency) => {
+  return { type: ADD_CURRENCY, cost: cost, currency: currency };
+};
+
+export const addOnTickCurrencyModifier = modifier => {
+  return { type: ADD_ON_TICK_CURRENCY_MODIFER, modifier: modifier };
+};
+
+export const addOnClickCurrencyModifier = modifier => {
+  return { type: ADD_ON_CLICK_CURRENCY_MODIFER, modifier: modifier };
 };
 
 export const addUpgrade = upgrade => {

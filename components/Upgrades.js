@@ -1,9 +1,21 @@
 import { connect } from "react-redux";
 import * as unsoldUpgrades from "../lib/Upgrade";
 
-const UpgradeList = () => {
-  const ups = Object.values(unsoldUpgrades).map(({ label, costs }) => (
-    <li> {label} </li>
+const UpgradeItem = ({ upgrade }) => {
+  const current = unsoldUpgrades[upgrade.type];
+
+  return (
+    <li key={upgrade.type}>
+      <span>{upgrade.bought ? "purchased" : ""}</span>
+    </li>
+  );
+};
+
+const UpgradeList = ({ upgrades }) => {
+  const ups = Object.values(unsoldUpgrades).map(({ label, costs, type }) => (
+    <li key={type}>
+      <button> {label} </button>
+    </li>
   ));
 
   return <ul> {ups} </ul>;
