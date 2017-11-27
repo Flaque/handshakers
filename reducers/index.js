@@ -4,7 +4,8 @@ import {
   PAY,
   ADD_ON_CLICK_CURRENCY_MODIFER,
   ADD_ON_TICK_CURRENCY_MODIFER,
-  RESET
+  RESET,
+  TICK
 } from "../actions";
 import dotProp from "dot-prop-immutable";
 import { initialState } from "../store";
@@ -42,6 +43,11 @@ const App = (state = initialState, action) => {
         currentBalance - action.cost
       );
     }
+    case TICK:
+      const current = state.ticks || 0;
+      return Object.assign({}, state, {
+        ticks: current + 1
+      });
     default:
       return state;
   }

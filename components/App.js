@@ -12,6 +12,7 @@ import { FOLLOWERS } from "../lib/Currency";
 const App = props => {
   return (
     <div>
+      <p>{props.ticks}</p>
       <button
         onClick={() => {
           props.addHandshakes();
@@ -30,7 +31,8 @@ const App = props => {
 
 function mapStateToProps(state) {
   return {
-    followers: state.wallet[FOLLOWERS]
+    followers: state.wallet[FOLLOWERS],
+    ticks: state.ticks
   };
 }
 

@@ -1,5 +1,7 @@
 import purchase from "../lib/Purchase";
 import { FOLLOWERS } from "../lib/Currency";
+import { TICK_TIME } from "../constants";
+import isFunc from "is-function";
 
 // Action names
 export const ADD_CURRENCY = "ADD_CURRENCY";
@@ -8,6 +10,7 @@ export const PAY = "PAY";
 export const ADD_ON_TICK_CURRENCY_MODIFER = "ADD_ON_TICK_CURRENCY_MODIFER";
 export const ADD_ON_CLICK_CURRENCY_MODIFER = "ADD_ON_CLICK_CURRENCY_MODIFER";
 export const RESET = "RESET";
+export const TICK = "TICK";
 
 // Action creators
 export const addHandshakesWithClick = () => {
@@ -23,6 +26,19 @@ export const addHandshakesWithClick = () => {
 
     dispatch(addCurrency(charge.currency, charge.cost));
   };
+};
+
+export const updateWalletOnTick = () => (dispatch, getState) => {
+  let charge = {};
+
+  getState().onTickModifiers.forEach(modify => {
+    if (!isFunc(modify)) {
+      throw new Error("Modify function is not a function");
+    }
+    charge = modify(charge);
+  });
+
+  dispatch(addCurrency(charge.currency, charge.cost));
 };
 
 export const addCurrency = (currency, cost) => {
@@ -43,6 +59,19 @@ export const addUpgrade = upgrade => {
 
 export const pay = (currency, cost) => {
   return { type: PAY, currency: currency, cost: cost };
+};
+
+export const tick = () => {
+  return { type: TICK };
+};
+
+export const tickAndUpdate = () => dispatch => {
+  dispatch(updateWalletOnTick());
+  dispatch(tick());
+};
+
+export const startClock = () => dispatch => {
+  return setInterval(() => dispatch(tickAndUpdate()), TICK_TIME);
 };
 
 export const buyUpgrade = upgrade => {
