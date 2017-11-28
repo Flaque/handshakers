@@ -209,11 +209,11 @@ const App = (state = initialState, action) => {
   switch (action.type) {
     case ADD_LEDGER:
       return Object.assign({}, state, {
-        waller: add(state.wallet, action.ledger)
+        wallet: add(state.wallet, action.ledger)
       });
     case UPDATE_WALLET:
       return Object.assign({}, state, {
-        waller: add(state.wallet, state.ledger)
+        wallet: add(state.wallet, state.ledger)
       });
     case SET_LEDGER:
       return Object.assign({}, state, {

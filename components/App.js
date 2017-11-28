@@ -1,21 +1,17 @@
 import { connect } from "react-redux";
-import { shakeHands, buyFollower } from "../actions/index";
+import { shakeHands } from "../actions/index";
+import { HANDSHAKES } from "../lib/currencies";
 
-const App = props => {
+const App = ({ wallet, shakeHands }) => {
   return (
     <div>
-      <button onClick={props.shakeHands}> Shake Hands</button>
-
-      {props.totalHandshakes > 10 && (
-        <button onClick={props.buyFollower}> Buy Follower </button>
-      )}
-
-      <p> {props.handshakes && <span>{props.handshakes} Handshakes</span>} </p>
-      <p> {props.followers && <span>{props.followers} Followers</span>} </p>
       <p>
-        {props.autoHandshakers && (
-          <span>{props.autoHandshakers} Volunteer Handshakers </span>
-        )}
+        <button onClick={shakeHands}>Shake Hands</button> {wallet[HANDSHAKES]}{" "}
+        Handshakes
+      </p>
+
+      <p>
+        <button onClick={shakeHands}>Shake Hands</button>{" "}
       </p>
     </div>
   );
@@ -23,22 +19,14 @@ const App = props => {
 
 function mapStateToProps(state) {
   return {
-    ticks: state.time.ticks,
-    handshakes: state.wallet.handshakes,
-    followers: state.wallet.followers,
-    autoHandshakers: state.pouch.autoHandshakers,
-    totalHandshakes: state.stats.handshakes
+    ticks: state.time.ticks || 0,
+    wallet: state.app.wallet || {}
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    shakeHands: () => {
-      dispatch(shakeHands());
-    },
-    buyFollower: () => {
-      dispatch(buyFollower());
-    }
+    shakeHands: () => dispatch(shakeHands())
   };
 }
 
