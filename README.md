@@ -163,14 +163,25 @@ _some_ sort of state management though.
 A general example with Redux might look like this:
 
 ```js
+const items = {
+    Investments: {
+        tick = (state) => {
+            return {
+                dollar: 5 * state.wallet.Investments
+            }
+        }
+    }
+}
+
 // Actions
 const ADD_LEDGER = "ADD_LEDGER";
 const UPDATE_WALLET = "UPDATE_WALLET";
+const SET_LEDGER = "SET_LEDGER";
 
 // Action creators
-const addLedger = ledger => {
-  return { type: ADD_LEDGER, ledger: ledger };
-};
+const addLedger = (ledger) => {
+  return { type: ADD_LEDGER, ledger: ledger};
+}
 
 const updateWallet = () => {
   return { type: UPDATE_WALLET };
@@ -178,6 +189,16 @@ const updateWallet = () => {
 
 const startTicker = () => dispatch => {
   return setInterval(() => dispatch(updateWallet()), 800);
+};
+
+const generateLedger = () => (dispatch, getState) => {
+  // Loop through all items and get each items "tick" ledger
+  const ledgers = Object.keys(getState().wallet).map(name => {
+    return items[keys].tick(getState());
+  });
+
+  const mainLedger = add(...ledgers);
+  dispatch({ type: SET_LEDGER, ledger: mainLedger });
 };
 
 // Initial State
@@ -188,11 +209,15 @@ const App = (state = initialState, action) => {
   switch (action.type) {
     case ADD_LEDGER:
       return Object.assign({}, state, {
-        ledger: add(state.ledger, action.ledger)
+        waller: add(state.wallet, action.ledger)
       });
     case UPDATE_WALLET:
       return Object.assign({}, state, {
         waller: add(state.wallet, state.ledger)
+      });
+    case SET_LEDGER:
+      return Object.assign({}, state, {
+        ledger: action.ledger
       });
     default:
       return state;
