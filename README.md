@@ -154,3 +154,48 @@ const Investments = {
     }
 }
 ```
+
+## With redux
+
+This system doesn't require redux, but it plays nicely with it. It does assume
+_some_ sort of state management though.
+
+A general example with Redux might look like this:
+
+```js
+// Actions
+const ADD_LEDGER = "ADD_LEDGER";
+const UPDATE_WALLET = "UPDATE_WALLET";
+
+// Action creators
+const addLedger = ledger => {
+  return { type: ADD_LEDGER, ledger: ledger };
+};
+
+const updateWallet = () => {
+  return { type: UPDATE_WALLET };
+};
+
+const startTicker = () => dispatch => {
+  return setInterval(() => dispatch(updateWallet()), 800);
+};
+
+// Initial State
+const initialState = { wallet: {}, ledger: {}, items: [] };
+
+// Reducers
+const App = (state = initialState, action) => {
+  switch (action.type) {
+    case ADD_LEDGER:
+      return Object.assign({}, state, {
+        ledger: add(state.ledger, action.ledger)
+      });
+    case UPDATE_WALLET:
+      return Object.assign({}, state, {
+        waller: add(state.wallet, state.ledger)
+      });
+    default:
+      return state;
+  }
+};
+```
