@@ -1,4 +1,9 @@
-import { TICK, UPDATE_HANDSHAKES, UPDATE_FOLLOWERS } from "../actions";
+import {
+  TICK,
+  UPDATE_HANDSHAKES,
+  UPDATE_FOLLOWERS,
+  UPDATE_AUTO_HANDSHAKERS
+} from "../actions";
 import dotProp from "dot-prop-immutable";
 import { combineReducers } from "redux";
 import { newWith, maybe, add } from "../util";
@@ -15,6 +20,19 @@ const time = (state = {}, action) => {
   }
 };
 
+// For items / volunteers / objects
+const pouch = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_AUTO_HANDSHAKERS:
+      return newWith(state, {
+        autoHandshakers: add(state.autoHandshakers, action.amount)
+      });
+    default:
+      return state;
+  }
+};
+
+// For currencies
 const wallet = (state = {}, action) => {
   switch (action.type) {
     case UPDATE_HANDSHAKES:
@@ -30,4 +48,4 @@ const wallet = (state = {}, action) => {
   }
 };
 
-export default combineReducers({ time, wallet });
+export default combineReducers({ time, wallet, pouch });
