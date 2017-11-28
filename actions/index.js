@@ -6,6 +6,7 @@ export const TICK = "TICK";
 export const UPDATE_HANDSHAKES = "UPDATE_HANDSHAKES";
 export const UPDATE_FOLLOWERS = "UPDATE_FOLLOWERS";
 export const UPDATE_AUTO_HANDSHAKERS = "UPDATE_AUTO_HANDSHAKERS";
+export const UPDATE_TOTAL_HANDSHAKES = "UPDATE_TOTAL_HANDSHAKES";
 
 const FOLLOWER_COST = 10;
 const autoHandShakerRate = 3;
@@ -22,8 +23,13 @@ export const updateAutoHandshakers = amount => {
   return { type: UPDATE_AUTO_HANDSHAKERS, amount: amount };
 };
 
+export const updateTotalHandshakes = amount => {
+  return { type: UPDATE_TOTAL_HANDSHAKES, amount: amount };
+};
+
 export const shakeHands = () => (dispatch, getState) => {
   dispatch(updateHandshakes(1));
+  dispatch(updateTotalHandshakes(1));
 };
 
 export const buyFollower = () => (dispatch, getState) => {

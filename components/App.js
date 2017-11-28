@@ -6,7 +6,7 @@ const App = props => {
     <div>
       <button onClick={props.shakeHands}> Shake Hands</button>
 
-      {props.handshakes > 10 && (
+      {props.totalHandshakes > 10 && (
         <button onClick={props.buyFollower}> Buy Follower </button>
       )}
 
@@ -26,7 +26,8 @@ function mapStateToProps(state) {
     ticks: state.time.ticks,
     handshakes: state.wallet.handshakes,
     followers: state.wallet.followers,
-    autoHandshakers: state.pouch.autoHandshakers
+    autoHandshakers: state.pouch.autoHandshakers,
+    totalHandshakes: state.stats.handshakes
   };
 }
 

@@ -2,11 +2,23 @@ import {
   TICK,
   UPDATE_HANDSHAKES,
   UPDATE_FOLLOWERS,
-  UPDATE_AUTO_HANDSHAKERS
+  UPDATE_AUTO_HANDSHAKERS,
+  UPDATE_TOTAL_HANDSHAKES
 } from "../actions";
 import dotProp from "dot-prop-immutable";
 import { combineReducers } from "redux";
 import { newWith, maybe, add } from "../util";
+
+const stats = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_TOTAL_HANDSHAKES:
+      return newWith(state, {
+        handshakes: add(state.handshakes, action.amount)
+      });
+    default:
+      return state;
+  }
+};
 
 const time = (state = {}, action) => {
   switch (action.type) {
@@ -48,4 +60,4 @@ const wallet = (state = {}, action) => {
   }
 };
 
-export default combineReducers({ time, wallet, pouch });
+export default combineReducers({ time, wallet, pouch, stats });
