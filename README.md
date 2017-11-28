@@ -1,49 +1,156 @@
-[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/zeit/next.js/tree/master/examples/with-redux)
+# Overview
 
-# Redux example
+## Currency
 
-## How to use
+A currency is a name for a number value. For example, in cookie-clicker, the
+currency is cookies. But you could have many currencies, like "gold" or
+"apples".
 
-Download the example [or clone the repo](https://github.com/zeit/next.js):
+## Wallet
 
-```bash
-curl https://codeload.github.com/zeit/next.js/tar.gz/master | tar -xz --strip=2 next.js-master/examples/with-redux
-cd with-redux
+A wallet is the current state of all currencies in the system.
+
+An example wallet might look like:
+
+```js
+const wallet = {
+  Cookies: 5,
+  Dogs: 6,
+  Buzzballs: 3045
+};
 ```
 
-Install it and run:
+## Ledger
 
-```bash
-npm install
-npm run dev
+A ledger is a collection of _updates_ to the current wallet. In structure, it
+looks very similar to a wallet.
+
+```js
+const ledger = {
+  Cookies: -5,
+  Dogs: 10
+};
 ```
 
-Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
+### Adding ledgers
 
-```bash
-now
+A ledger can be added to another ledger by combining the the map. Note that
+we're always creating a new item, not updating the old one.
+
+```js
+const newLedger = add(ledgerOne, ledgerTwo);
 ```
 
-## The idea behind the example
+### Adding to a wallet
 
-Usually splitting your app state into `pages` feels natural but sometimes you'll want to have global state for your app. This is an example on how you can use redux that also works with our universal rendering approach. This is just a way you can do it but it's not the only one.
+Similarly, a ledger can be added to a wallet.
 
-In the first example we are going to display a digital clock that updates every second. The first render is happening in the server and then the browser will take over. To illustrate this, the server rendered clock will have a different background color than the client one.
+```js
+const newWallet = add(wallet, ledger);
+```
 
-![](http://i.imgur.com/JCxtWSj.gif)
+### A "main" ledger
 
-Our page is located at `pages/index.js` so it will map the route `/`. To get the initial data for rendering we are implementing the static method `getInitialProps`, initializing the redux store and dispatching the required actions until we are ready to return the initial state to be rendered. Since the component is wrapped with `next-redux-wrapper`, the component is automatically connected to Redux and wrapped with `react-redux Provider`, that allows us to access redux state immediately and send the store down to children components so they can access to the state when required.
+For optimization, all ledgers can be combined and cached into a main ledger that
+stores the total amount of updates needed to be applied.
 
-For safety it is recommended to wrap all pages, no matter if they use Redux or not, so that you should not care about it anymore in all child components.
+```js
+const mainLedger = add(...ledgers);
+```
 
-`withRedux` function accepts `makeStore` as first argument, all other arguments are internally passed to `react-redux connect()` function. `makeStore` function will receive initialState as one argument and should return a new instance of redux store each time when called, no memoization needed here. See the [full example](https://github.com/kirill-konshin/next-redux-wrapper#usage) in the Next Redux Wrapper repository. And there's another package [next-connect-redux](https://github.com/huzidaha/next-connect-redux) available with similar features.
+## Ticks
 
-To pass the initial state from the server to the client we pass it as a prop called `initialState` so then it's available when the client takes over.
+A tick is a period of time before between updates. You can set the time at any
+number, it does not need to be a second. I like to choose `800` miliseconds.
 
-The trick here for supporting universal redux is to separate the cases for the client and the server. When we are on the server we want to create a new store every time, otherwise different users data will be mixed up. If we are in the client we want to use always the same store. That's what we accomplish on `store.js`
+### Tick Updating
 
-The clock, under `components/Clock.js`, has access to the state using the `connect` function from `react-redux`. In this case Clock is a direct child from the page but it could be deep down the render tree.
+It's common to update the wallet on a tick by adding it with the ledger like so:
 
-The second example, under `components/AddCount.js`, shows a simple add counter function with a class component implementing a common redux pattern of mapping state and props. Again, the first render is happening in the server and instead of starting the count at 0, it will dispatch an action in redux that starts the count at 1. This continues to highlight how each navigation triggers a server render first and then a client render second, when you navigate between pages.
+```js
+onTick(wallet => {
+  return add(wallet, ledger);
+});
+```
 
-For simplicity and readability, Reducers, Actions, and Store creators are all in the same file: `store.js`
+## Items
+
+Items are objects that contain functions that return ledgers.
+
+```js
+const Fizz = {
+    buzz = (state) => {
+        return {
+            dorkle: state.dorkleValue + 5
+        };
+    }
+}
+```
+
+### Buyable Items
+
+Buyable items have a `cost` function.
+
+```js
+const Apple = {
+    cost = (state) => {
+        return {
+            dollar: state.marketValue + state.markup
+        };
+    }
+}
+```
+
+### Tick Effect Items
+
+Items that added to the tick ledger have a `tick` function.
+
+```js
+const Investment = {
+    tick = (state) => {
+        return {
+            dollar: state.stockmarketAverage
+        }
+    }
+}
+```
+
+### General properties
+
+Items can have any property you would like to add to them and that property can
+be accessed in the functions.
+
+```js
+const Foo = {
+    baseCost : 5,
+    cost = (state) => {
+        return {
+            dollar: state.markup + this.baseCost
+        }
+    }
+}
+```
+
+### Item Currencies
+
+Items are more like blueprints, not state containers. Therefore if you would
+like to have more than one item, you may want to use the wallet to store the
+amount of an item and then pass that into the item's ledger functions.
+
+For example:
+
+```js
+// wallet
+const wallet = {
+    Investments: 5
+}
+
+// Items
+const Investments = {
+    tick = (state) => {
+        return {
+            dollar: state.stockmarketAverage * state.wallet.Investments
+        }
+    }
+}
+```
