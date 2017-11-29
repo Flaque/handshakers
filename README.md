@@ -122,13 +122,13 @@ be accessed in the functions.
 
 ```js
 const Foo = {
-    baseCost : 5,
-    cost = (state) => {
-        return {
-            dollar: state.markup + this.baseCost
-        }
-    }
-}
+  baseCost: 5,
+  cost: function(state) {
+    return {
+      dollar: state.markup + this.baseCost
+    };
+  }
+};
 ```
 
 ### Item Currencies

@@ -12,6 +12,7 @@ export const cost = (item, state) => {
 
   const total = item.cost(state);
   const finalLedger = add(total, state.app.wallet);
+
   if (inTheBlack(finalLedger)) {
     return { canBuy: true, ledger: total };
   } else {

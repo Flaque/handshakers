@@ -1,8 +1,9 @@
 import { connect } from "react-redux";
-import { shakeHands } from "../actions/index";
+import { shakeHands, buy } from "../actions/index";
+import { AutoHandShakers } from "../lib/items";
 import { HANDSHAKES } from "../lib/currencies";
 
-const App = ({ wallet, shakeHands }) => {
+const App = ({ wallet, shakeHands, buyAutoHandshaker }) => {
   return (
     <div>
       <p>
@@ -11,7 +12,8 @@ const App = ({ wallet, shakeHands }) => {
       </p>
 
       <p>
-        <button onClick={shakeHands}>Shake Hands</button>{" "}
+        <button onClick={buyAutoHandshaker}>Buy Auto Handshaker</button>
+        {wallet[AutoHandShakers.type]} Auto Handshakers
       </p>
     </div>
   );
@@ -26,7 +28,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    shakeHands: () => dispatch(shakeHands())
+    shakeHands: () => dispatch(shakeHands()),
+    buyAutoHandshaker: () => dispatch(buy(AutoHandShakers))
   };
 }
 

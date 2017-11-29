@@ -51,6 +51,14 @@ test("buying an item subtracts its cost from your wallet", () => {
   expect(store.getState().app.wallet.Gold).toBe(1);
 });
 
+test("can't buy an item with empty wallet", () => {
+  const store = initStore();
+
+  store.dispatch(buy(MagicSword));
+
+  expect(store.getState().app.wallet[MagicSword.type]).toBeUndefined();
+});
+
 test("generateLedger with an item with a tick updates the main ledger", () => {
   const store = initStore();
 
