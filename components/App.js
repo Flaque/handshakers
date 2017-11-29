@@ -3,17 +3,20 @@ import { shakeHands, buy } from "../actions/index";
 import { AutoHandShakers } from "../lib/items";
 import { HANDSHAKES } from "../lib/currencies";
 
-const App = ({ wallet, shakeHands, buyAutoHandshaker }) => {
+const App = ({ wallet, shakeHands, buyAutoHandshaker, autoShakersCost }) => {
   return (
     <div>
       <p>
-        <button onClick={shakeHands}>Shake Hands</button> {wallet[HANDSHAKES]}{" "}
-        Handshakes
+        <button onClick={shakeHands}>Shake Hands</button>
+        <p> {wallet[HANDSHAKES]} Handshakes </p>
       </p>
 
       <p>
         <button onClick={buyAutoHandshaker}>Buy Auto Handshaker</button>
-        {wallet[AutoHandShakers.type]} Auto Handshakers
+      </p>
+      <p> {wallet[AutoHandShakers.type]} Auto Handshakers </p>
+      <p>
+        <b> Cost: </b> {autoShakersCost}
       </p>
     </div>
   );
@@ -22,7 +25,8 @@ const App = ({ wallet, shakeHands, buyAutoHandshaker }) => {
 function mapStateToProps(state) {
   return {
     ticks: state.time.ticks || 0,
-    wallet: state.app.wallet || {}
+    wallet: state.app.wallet || {},
+    autoShakersCost: -AutoHandShakers.cost(state)[HANDSHAKES]
   };
 }
 
