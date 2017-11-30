@@ -1,4 +1,4 @@
-import { TICK, SET_WALLET } from "../actions";
+import { TICK, SET_WALLET, SET_POUCH_EFFECTS_LEDGER } from "../actions";
 import { combineReducers } from "redux";
 import { newWith } from "../util";
 import { add } from "merchant.js";
