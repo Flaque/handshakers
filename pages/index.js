@@ -5,18 +5,19 @@ import withRedux from "next-redux-wrapper";
 import { initStore } from "../store";
 import { startClock } from "../actions/index";
 import { bindActionCreators } from "redux";
+import Centered from "../components/ui/Centered";
 
 class Page extends React.Component {
-  static getInitialProps({ store, isServer }) {
-    return { isServer };
-  }
-
   componentDidMount() {
     this.timer = this.props.startClock();
   }
 
   render() {
-    return <App />;
+    return (
+      <Centered>
+        <App />
+      </Centered>
+    );
   }
 }
 
