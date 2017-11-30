@@ -15,7 +15,7 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <title>Send letters to your congress person!</title>
+          <title>Shake some hands!</title>
           {this.props.styleTags}
         </Head>
         <body>
