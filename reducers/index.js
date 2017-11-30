@@ -1,6 +1,8 @@
-import { TICK } from "../actions";
+import { TICK, SET_WALLET } from "../actions";
 import { combineReducers } from "redux";
 import { newWith } from "../util";
+import { add } from "merchant.js";
+import { Map } from "immutable";
 
 const time = (state = {}, action) => {
   switch (action.type) {
@@ -14,8 +16,16 @@ const time = (state = {}, action) => {
   }
 };
 
-const app = (state = { wallet: {}, ledger: {}, items: [] }, action) => {
+const app = (state = { wallet: Map(), ledger: Map(), items: [] }, action) => {
   switch (action.type) {
+    case SET_WALLET:
+      return newWith(state, {
+        wallet: action.wallet
+      });
+    case SET_POUCH_EFFECTS_LEDGER:
+      return newWith(state, {
+        ledger: action.ledger
+      });
     default:
       return state;
   }
