@@ -1,4 +1,9 @@
-import { TICK, SET_WALLET, SET_POUCH_EFFECTS_LEDGER } from "../actions";
+import {
+  TICK,
+  SET_WALLET,
+  SET_POUCH_EFFECTS_LEDGER,
+  UPDATE_WALLET
+} from "../actions";
 import { combineReducers } from "redux";
 import { newWith } from "../util";
 import { add } from "merchant.js";
@@ -18,6 +23,10 @@ const time = (state = {}, action) => {
 
 const app = (state = { wallet: Map(), ledger: Map(), items: [] }, action) => {
   switch (action.type) {
+    case UPDATE_WALLET:
+      return newWith(state, {
+        wallet: add(Map(state.wallet), Map(state.ledger))
+      });
     case SET_WALLET:
       return newWith(state, {
         wallet: action.wallet

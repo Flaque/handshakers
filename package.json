@@ -12,7 +12,7 @@
     "dot-prop-immutable": "^1.4.0",
     "immutable": "^3.8.2",
     "invariant": "^2.2.2",
-    "merchant.js": "^0.3.0",
+    "merchant.js": "^0.3.1",
     "next": "^4.1.4",
     "next-redux-wrapper": "^1.0.0",
     "react": "^16.1.1",

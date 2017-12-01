@@ -3,10 +3,12 @@ import * as items from "../lib/pouch";
 import { HANDSHAKES } from "../lib/currencies";
 import { cost } from "./util";
 import invariant from "invariant";
-import { buy, inTheBlack, addItem, pouchEffectsLedger } from "merchant.js";
+import { Map } from "immutable";
+import { buy, inTheBlack, addItem, pouchEffectsLedger, add } from "merchant.js";
 
 // Action names
 export const TICK = "TICK";
+export const UPDATE_WALLET = "UPDATE_WALLET";
 export const SET_WALLET = "SET_WALLET";
 export const ADD_ITEM = "ADD_ITEM";
 export const SET_POUCH_EFFECTS_LEDGER = "SET_POUCH_EFFECTS_LEDGER";
@@ -17,8 +19,12 @@ export const setWallet = wallet => {
 };
 
 export const addLedger = ledger => (dispatch, getState) => {
-  const wallet = getState().app.wallet;
+  const wallet = Map(getState().app.wallet);
   dispatch(setWallet(add(wallet, ledger)));
+};
+
+export const shakeHands = () => dispatch => {
+  dispatch(addLedger(Map({ [HANDSHAKES]: 1 })));
 };
 
 export const setPouchEffectsLedger = ledger => {
@@ -47,7 +53,15 @@ export const buyItem = (type, pouch = items) => (dispatch, getState) => {
   dispatch(setWallet(newWallet));
 
   // Update pouchEffectsLedger
-  dispatch(setPouchEffectsLedger(pouchEffectsLedger(pouch, newWallet, state)));
+  dispatch(
+    setPouchEffectsLedger(
+      pouchEffectsLedger(Object.values(pouch), newWallet, state)
+    )
+  );
+};
+
+export const updateWallet = () => {
+  return { type: UPDATE_WALLET };
 };
 
 // Time
@@ -57,8 +71,7 @@ export const tick = () => {
 
 export const tickAndUpdate = () => dispatch => {
   dispatch(tick());
-
-  // Update or something
+  dispatch(updateWallet());
 };
 
 export const startClock = () => dispatch => {
