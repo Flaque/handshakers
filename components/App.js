@@ -12,16 +12,24 @@ const get = (wallet, type) => {
   return Math.ceil(wallet.get(type)) || 0;
 };
 
-const App = ({ wallet, ticks, shakeHands, buy }) => {
+const AutoShakers = ({ wallet, buy }) => [
+  <button key="auto-shaker-button" onClick={() => buy(pouch.AutoHandShakers)}>
+    Buy AutoHandshakers
+  </button>,
+  <p key="auto-shaker-p">
+    {get(wallet, pouch.AutoHandShakers.type)} AutoHandshakers
+  </p>
+];
+
+const App = ({ wallet, ticks, shakeHands, buy, shown }) => {
   return (
     <div>
       <button onClick={shakeHands}>Shake Hands</button>
       <p>{get(wallet, HANDSHAKES)} Handshakes</p>
 
-      <button onClick={() => buy(pouch.AutoHandShakers)}>
-        Buy AutoHandshakers
-      </button>
-      <p>{get(wallet, pouch.AutoHandShakers.type)} AutoHandshakers</p>
+      {shown.includes(pouch.AutoHandShakers.type) && (
+        <AutoShakers wallet={wallet} buy={buy} />
+      )}
     </div>
   );
 };
@@ -29,7 +37,8 @@ const App = ({ wallet, ticks, shakeHands, buy }) => {
 function mapStateToProps(state) {
   return {
     ticks: state.time.ticks || 0,
-    wallet: state.app.wallet
+    wallet: state.app.wallet,
+    shown: state.app.shown
   };
 }
 

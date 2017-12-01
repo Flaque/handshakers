@@ -12,8 +12,13 @@ export const UPDATE_WALLET = "UPDATE_WALLET";
 export const SET_WALLET = "SET_WALLET";
 export const ADD_ITEM = "ADD_ITEM";
 export const SET_POUCH_EFFECTS_LEDGER = "SET_POUCH_EFFECTS_LEDGER";
+export const SHOW_ITEM = "SHOW_ITEM";
 
-// Ledgers
+// Action Creators
+export const showItem = item => {
+  return { type: SHOW_ITEM, item: item };
+};
+
 export const setWallet = wallet => {
   return { type: SET_WALLET, wallet: wallet };
 };
@@ -23,12 +28,24 @@ export const addLedger = ledger => (dispatch, getState) => {
   dispatch(setWallet(add(wallet, ledger)));
 };
 
-export const shakeHands = () => dispatch => {
+export const shakeHands = (pouch = items) => dispatch => {
   dispatch(addLedger(Map({ [HANDSHAKES]: 1 })));
+
+  // Set items as "show" or not "show"
+  dispatch(setPouchShown(pouch));
 };
 
 export const setPouchEffectsLedger = ledger => {
   return { type: SET_POUCH_EFFECTS_LEDGER, ledger: ledger };
+};
+
+export const setPouchShown = (pouch = items) => (dispatch, getState) => {
+  Object.values(pouch).forEach(item => {
+    if (!item.show) return null;
+    if (item.show(getState())) {
+      dispatch(showItem(item));
+    }
+  });
 };
 
 export const buyItem = (type, pouch = items) => (dispatch, getState) => {
@@ -58,6 +75,9 @@ export const buyItem = (type, pouch = items) => (dispatch, getState) => {
       pouchEffectsLedger(Object.values(pouch), newWallet, state)
     )
   );
+
+  // Set items as "show" or not "show"
+  dispatch(setPouchShown(pouch));
 };
 
 export const updateWallet = () => {
